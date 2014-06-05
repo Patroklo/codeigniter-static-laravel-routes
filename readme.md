@@ -24,6 +24,7 @@ For now I'm not licensing this work. It has some code from the Bonfire Project, 
 Just put copy the files into your server using the same folder structure. If you have a previously installed module system as HMVC you could have to overwrite the MY_Route files. If that's the case and you have any trouble making it, just ask for directions about that.
 
 
+
 ## Change Log
 
 ### 1.0:
