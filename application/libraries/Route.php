@@ -4,9 +4,6 @@
  * Route library.
  *
  * Provides enhanced Routing capabilities to CodeIgniter-based applications.
- * 
- * Code loosely based on Bonfire Project at https://github.com/ci-bonfire/Bonfire/
- * 
  */
 class Route {
 
