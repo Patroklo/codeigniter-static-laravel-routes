@@ -10,9 +10,9 @@ Based on the routing work of ([Bonfire team](http://cibonfire.com/)).
 ## Requirements
 
 Codeigniter 3.x
-(Working to release it in CI 2.X)
 
-Php 5.2 or above
+
+Php 5.3 or above
 
 ## Licensing
 
@@ -24,8 +24,17 @@ For now I'm not licensing this work. It has some code from the Bonfire Project, 
 Just put copy the files into your server using the same folder structure. If you have a previously installed module system as HMVC you could have to overwrite the MY_Route files. If that's the case and you have any trouble making it, just ask for directions about that.
 
 
+## Tutorial
+
+```PHP
+
+Route::get('welcome', 'Welcome/index');
+
+```
+
 
 ## Change Log
+
 
 ### 1.0:
 *	First release of the system. Added static routes, filter hook system and naming routes system.
