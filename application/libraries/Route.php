@@ -667,10 +667,14 @@ class Route {
         {
             //first of all, we check for optional parameters. If they exist, 
             //we will make another route without the optional parameter
-            foreach($this->optional_parameters as $optional => $parameter)
+            foreach($this->optional_parameters as $parameter)
             {
-                $from = str_replace('/{'.$parameter.'}', '', $this->pre_from);
-                
+            	$from = $this->pre_from;
+				
+            	foreach($parameter as $p)
+				{
+					$from = str_replace('/{'.$p.'}', '', $from);
+				}
                 //save the optional routes in case we will need them for where callings
                 $this->optional_objects[] = Route::createRoute($from, $this->to, $this->options, $this->nested);
             }
@@ -693,13 +697,16 @@ class Route {
                 //we make the parameters that the route could have and, if 
                 //it's an optional parameter, we add it into the optional parameters array
                 //to make later the new route without it
+                
+                $uris = array();
                 foreach($matches[1] as $parameter)
                 {
                     if(substr($parameter, -1) == '?')
                     {
                         $new_key = str_replace('?', '', $parameter);
                         
-                        $this->optional_parameters[$parameter] = $new_key;
+                        //$this->optional_parameters[$parameter] = $new_key;
+                        $uris[] = $new_key;
                         
                         $this->pre_from = str_replace('{'.$parameter.'}', '{'.$new_key.'}', $this->pre_from);
                         
@@ -708,6 +715,35 @@ class Route {
                     
                     $this->parameters[$parameter] = array('value' => NULL);
                 }
+				
+				if(!empty($uris))
+				{
+					$num = count($uris); 
+					
+					//The total number of possible combinations 
+					$total = pow(2, $num);
+					
+					//Loop through each possible combination  
+					for ($i = 0; $i < $total; $i++) {
+						
+						$sub_list = array();
+
+					    for ($j = 0; $j < $num; $j++) { 
+					       //Is bit $j set in $i? 
+					        if (pow(2, $j) & $i){
+					        	$sub_list[] = $uris[$j];	
+					        } 
+					    } 
+						
+					    $this->optional_parameters[] = $sub_list;
+					}
+				
+					if(!empty($this->optional_parameters))
+					{
+						array_shift($this->optional_parameters);
+					}
+				}
+
 
                 $uri_list = explode('/', $this->pre_from);
                 
