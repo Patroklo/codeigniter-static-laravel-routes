@@ -3,10 +3,10 @@
 A little group or libraries that let Codeigniter work as a static routing system with filters as simmilar to the Laravel routing system as I could have done.
 
 
-Written by Joseba Juániz ([@Patroklo](http://twitter.com/Patroklo)).
+Written by Joseba Juï¿½niz ([@Patroklo](http://twitter.com/Patroklo)).
 Based on the routing work of ([Bonfire team](http://cibonfire.com/)).
 
-
+  prueba
 ## Requirements
 
 Codeigniter 3.x
