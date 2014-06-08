@@ -35,7 +35,7 @@ The developer can use all the HTML methods to define a Route. This route will on
 
 The basic methods are: 
 
-	```
+	
 	Route::get('user', 			'user/index');
 	Route::post('user/(:any)', 	'user/load/$1');
 	Route::put('user/(:any), 	'user/update/$1');
@@ -43,7 +43,7 @@ The basic methods are:
 	Route::head('user', 		'user/index');
 	Route::patch('user/(:any), 	'user/update/$1');
 	Route::options('user/(:any),'user/load/$1');
-	```
+	
 The developer can also use two additional functions that let the route to be generated in more than one method:
 
 `any` will work with any HTTP method (GET, POST, PUT, DELETE...).
