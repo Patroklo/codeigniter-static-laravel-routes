@@ -35,7 +35,7 @@ The developer can use all the HTML methods to define a Route. This route will on
 
 The basic methods are: 
 
-	```PHP
+	```
 	Route::get('user', 			'user/index');
 	Route::post('user/(:any)', 	'user/load/$1');
 	Route::put('user/(:any), 	'user/update/$1');
@@ -48,12 +48,12 @@ The developer can also use two additional functions that let the route to be gen
 
 `any` will work with any HTTP method (GET, POST, PUT, DELETE...).
 
- 	```PHP
+ 	```
  	Route::any('user', 			'user/index');
 	```
 `match` lets the developer to define manually wich methods will be accepted by this route.
  
- 	```PHP
+ 	```
  	Route::match(array('GET', 'POST'), 'user', 'user/index');
 	```
 
@@ -62,7 +62,7 @@ The developer can also use two additional functions that let the route to be gen
 The developer can name a route. That will let him to call this name instead of using all the route in the future.
 
 
- 	```PHP
+ 	```
  	Route::set_name('user_update', 'admin/user/load/');
  	
  	Route::get('user', 'user/index', array('as' => 'user'));
@@ -70,7 +70,7 @@ The developer can name a route. That will let him to call this name instead of u
 
 Calling a named route:
  
- 	```PHP
+ 	```
  	echo Route::named('user');
  	
  	redirect(Route::named('user'));
@@ -81,7 +81,7 @@ Calling a named route:
 The developer can also define named parameters in each route instead of using wildcars or regular expressions. This will let the developer use them also in the URI with their defined names.
 If the developer don't define a named parameter, it will be used a an `(:any)` in the route.
 
-	```PHP
+	```
 	Route::any('user/{id}',		'user/load/$1');
 	```
 
@@ -89,20 +89,20 @@ There are two kinds of parameter definitions. The global definition, that will s
 
 Global parameter definition:
 
-	```PHP
+	```
 	Route::pattern('id',		'/[0-9]+/');
 	Route::pattern('name',		'(:any)');
 	```
 
 Local parameter definition:
 
-	```PHP
+	```
 	Route::post('user/{id}', 	'user/load/$1')->where('id', '/[0-9]+/');
 	```
 
 Multiple local parameter definition;
 
-	```PHP
+	```
 	Route::post('user/{id}/{name}', 	'user/load/$1/$2')->where(array('id' => '/[0-9]+/', 'name' => '(:any)'));
 	```
 	
@@ -111,7 +111,7 @@ Multiple local parameter definition;
 There can be defined optional parameters. That will let Codeigniter use that route as much as there is or isn't a URI defined in that position.
 The parameter definition is the same as the normal Named Parameters (the parameter name without the question mark "?").
 
-	```PHP
+	```
 	Route::any('user/{id?}', 	'user/load/$1')->where('id', '/[0-9]+/');
 	```
 	
@@ -119,7 +119,7 @@ This will let the developer use "user" and "user/12" as routes using Codeigniter
 
 The developer can also stack multiple optional parameters like this and all the possible permutations of the optional uris will be defined automatically:
 
-	```PHP
+	```
 	Route::any('user/{id?}/{name?}/{telephone?}', 	'user/load/$1/$2/$3')->where('id', '/[0-9]+/');
 	```
 
@@ -127,7 +127,7 @@ The developer can also stack multiple optional parameters like this and all the 
 
 Codeigniter will store a list of this parameters in the URI library, so the developer can access them using their name instead of the position in the uri segment.
 
-	```PHP
+	```
 	$user_id = $this->uri->segment('id');
 	
 	$user_name = $this->uri->rsegment('name');
@@ -140,7 +140,7 @@ This is useful for adding additional info or making previous checks, like if the
 
 Filter definition:
 
-	```PHP
+	```
 	Route::filter('logged_in', function(){
 	
 		if($this->auth->logged_in() == FALSE)
@@ -156,7 +156,7 @@ Adding a filter to a route:
 
 The developer can define two filter callings, `before` a route calling and `after` the route execution.
 
-	```PHP
+	```
 	Route::any('user/{id}',	'user/load/$1', array('before' => 'logged_in'));
 	```
 
@@ -164,7 +164,7 @@ This will launch the logged_in check before Codeigniter calls the `load` method,
 
 Passing multiple filters
 
-	```PHP
+	```
 	Route::any('user/{id}',	'user/load/$1', array('before' => array('logged_in', 'check_params')));
 	Route::any('user/{id}',	'user/load/$1', array('after' => 'logged_in|check_params'));
 	```
@@ -173,7 +173,7 @@ Passing multiple filters
 
 This lets the developer add a prefix to every route inside it. This it's useful for defining admin routes, for example.
 
-	```PHP
+	```
 	Route::prefix('admin', function(){
 	
 		Route::prefix('user', function(){
@@ -187,7 +187,7 @@ This lets the developer add a prefix to every route inside it. This it's useful 
 
 Another way of define route groups
 
-	```PHP
+	```
 	Route::any('admin', 'admin/index', array(), function(){
 
 		Route::any('user', 'user/index');
@@ -197,7 +197,7 @@ Another way of define route groups
 
 ### RESTFUL like routes
 
-	```PHP
+	```
 	Route::resources('photos');
 	```
 
@@ -216,7 +216,7 @@ This will autocreate all this routes:
 
 The developer can make with one call a 6 tier route definition
 
-	```PHP
+	```
 	Route::context('photos', 'photo');
 	```
 
@@ -231,7 +231,7 @@ The developer can make with one call a 6 tier route definition
 
 Not very useful now that Codeigniter only has static routes with this library, but the developer can also block manually routes.
 
-	```PHP
+	```
 	Route::block('user/(:any)');
 	```
 Will generate a blank route to this uris that, eventually, will led to a 404 display error.
