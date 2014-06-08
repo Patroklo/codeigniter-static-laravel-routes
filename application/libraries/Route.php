@@ -373,7 +373,7 @@ class Route {
     {
         if(!empty(self::$prefix))
         {
-            return end(self::$prefix).'/';
+           return implode('/',self::$prefix).'/';
         }
         else
         {
