@@ -75,6 +75,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |		my-controller/my-method	-> my_controller/my_method
 */
 
+	/**
+	 *
+	 * Route:: code here
+	 * 
+	 */
+
+
 	$route = Route::map();
 
 	
