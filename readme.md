@@ -1,4 +1,4 @@
-# CodeIgniter Laravel-like static routes and filters
+﻿# CodeIgniter Laravel-like static routes and filters
 
 A little group or libraries that let Codeigniter work as a static routing system with filters as simmilar to the Laravel routing system as I could have done.
 
@@ -57,6 +57,14 @@ The developer can also use two additional functions that let the route to be gen
  	Route::match(array('GET', 'POST'), 'user', 'user/index');
 	
 
+### Subdomain routing
+
+It uses the same routing method as the Basic routing but adding an extra wildcard for the subdomain. 
+Adding this extra option means that the routes with them won't show on urls without subdomain.
+
+	Route::any('user',			'user/index', array('subdomain' => '(:any)'));
+
+
 ### Named routes
 
 The developer can name a route. That will let him to call this name instead of using all the route in the future.
@@ -78,14 +86,14 @@ Calling a named route:
 
 ### Named parameters
 
-The developer can also define named parameters in each route instead of using wildcars or regular expressions. This will let the developer use them also in the URI with their defined names.
+The developer can also define named parameters in each route instead of using wildcards or regular expressions. This will let the developer use them also in the URI with their defined names.
 If the developer don't define a named parameter, it will be used a an `(:any)` in the route.
 
 	
 	Route::any('user/{id}',		'user/load/$1');
 	
 
-There are two kinds of parameter definitions. The global definition, that will set a wildcar or regular expression to every named parameter with that name in the routes file and the local definition, that will only affect to the Route in wich it's defined.
+There are two kinds of parameter definitions. The global definition, that will set a wildcard or regular expression to every named parameter with that name in the routes file and the local definition, that will only affect to the Route in wich it's defined.
 
 Global parameter definition:
 
