@@ -15,9 +15,10 @@
 		}
 		
 		
-		public function _remap($method, $params = array())
+		public function _remap($method, $parameters = array())
 		{
-			$this->$method($params);
+
+			empty($parameters) ? $this->$method() : call_user_func_array(array($this, $method), $parameters);
 			
 			if($method != 'call_filters')
 			{

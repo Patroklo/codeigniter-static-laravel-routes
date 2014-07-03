@@ -26,6 +26,10 @@ class Route {
     protected static $pattern_list  = array();
     
     protected static $filter_list   = array();
+	
+	protected static $active_subdomain;
+	
+	protected static $subdomain;
 
     //--------------------------------------------------------------------
 
@@ -46,7 +50,7 @@ class Route {
     {
         $controller = isset($routes['default_controller']) ? $routes['default_controller'] : self::$default_home;
 
-
+		//we mount the route object array with all the from routes remade
         foreach(self::$pre_route_objects as &$object)
         {
             self::$route_objects[$object->get_from()] = &$object;
@@ -54,12 +58,24 @@ class Route {
         
         self::$pre_route_objects = array();
 
-        foreach (self::$route_objects as $route_object)
+        foreach (self::$route_objects as $key => $route_object)
         {
-            $from   = $route_object->get_from();
-            $to     = $route_object->get_to();
-            
-            $routes[$from] = str_replace('{default_controller}', $controller, $to);
+        	$add_route = TRUE;
+			//if there is a subdomain, we will check if it's ok with the route.
+			//all the previously checked subdomain routes should be ignored because
+			//we already have checked them
+        	if($route_object->get_options('subdomain') != FALSE)
+			{
+				$add_route = self::_CheckSubdomain($route_object->get_options('subdomain'));
+			}
+			
+			if($add_route)
+			{
+	            $from   = $route_object->get_from();
+	            $to     = $route_object->get_to();
+	            
+	            $routes[$from] = str_replace('{default_controller}', $controller, $to);
+			}
         }
 
         return $routes;
@@ -333,11 +349,28 @@ class Route {
      */
     public static function prefix($name, Closure $callback)
     {
-        self::_add_prefix($name);
+    	if(is_array($name))
+		{
+			if(array_key_exists('subdomain', $name))
+			{
+				$subdomain = $name['subdomain'];
+			}
+			
+			$name = $name['name'];
+		}
 
-        call_user_func($callback);
+		self::_add_prefix($name);
 
-        self::_delete_prefix();
+		if(isset($subdomain))
+		{
+			self::subdomain($subdomain, $callback);
+		}
+		else
+		{
+			call_user_func($callback);
+		}
+	    
+		self::_delete_prefix(); 
     }
 
     //--------------------------------------------------------------------
@@ -552,6 +585,15 @@ class Route {
      */
     static function createRoute($from, $to, $options=array(), $nested=false)
     {
+		if(!is_null(self::$active_subdomain))
+		{
+			$options['subdomain'] = self::$active_subdomain;
+		}
+		
+		if(array_key_exists('subdomain', $options) && self::_CheckSubdomain($options['subdomain']) == FALSE)
+		{
+			return FALSE;
+		}
 
         $new_route = new Route_object($from, $to, $options, $nested);
         
@@ -562,6 +604,97 @@ class Route {
         return new Route_facade($new_route);
         
     }
+	
+	
+    //--------------------------------------------------------------------
+
+    //--------------------------------------------------------------------
+    // Subdomain Methods
+    //--------------------------------------------------------------------	
+	
+	
+	static function get_subdomain()
+	{
+
+		if(is_null(self::$subdomain))
+		{
+			if(defined('ROUTE_DOMAIN_NAME') === FALSE)
+			{
+				define('ROUTE_DOMAIN_NAME', $_SERVER['HTTP_HOST']);	
+			}	
+					
+			self::$subdomain = preg_replace('/^(?:([^\.]+)\.)?'.ROUTE_DOMAIN_NAME.'$/', '\1', $_SERVER['HTTP_HOST']);
+		}
+
+		return self::$subdomain;
+	}
+	
+	static function subdomain($subdomain_rules, closure $callback)
+	{
+		if(self::_CheckSubdomain($subdomain_rules) == TRUE)
+		{
+			self::$active_subdomain = $subdomain_rules;
+			call_user_func($callback);	
+		}
+		
+		self::$active_subdomain = NULL;
+	}
+	
+	
+	static private function _CheckSubdomain($subdomain_rules = NULL)
+	{
+		$subdomain = self::get_subdomain();
+		
+		//if the subdomain rules are "FALSE" then if we have a subdomain we won't make the route, because
+		//that's the indication of not allowing subdomains in that route
+		if($subdomain != '' and $subdomain_rules == FALSE)
+		{
+			return FALSE;
+		}
+		elseif($subdomain == '' and $subdomain_rules == FALSE)
+		{
+			return TRUE;
+		}
+		
+		//if subdomain it's empty, then we will return false, because there is no subdomain in the url
+		if($subdomain == '')
+		{
+			return FALSE;
+		}
+		
+		$i = preg_match('/^\{(.+)\}$/', $subdomain_rules);
+	
+		//if the subdomain rules have a named parameter, we will wait till the end of the 
+		//route generation for it's rule
+		if($i > 0)
+		{
+			return TRUE;
+		}
+		
+		$i = preg_match('/^\(\:any\)/', $subdomain_rules);
+		
+		if($i > 0)
+		{
+			return TRUE;
+		}
+		
+		$i = preg_match('/^\(\:num\)/', $subdomain_rules);
+		
+		if($i > 0)
+		{
+			return is_numeric($subdomain);
+		}
+		
+		//if we arrive here we will count the subdomain_rules as a regex, so se will check it
+		$i = preg_match($subdomain_rules, $subdomain);
+		
+		if($i > 0)
+		{
+			return TRUE;
+		}
+		
+		return FALSE;
+	}
 
 
     //--------------------------------------------------------------------
@@ -683,7 +816,14 @@ class Route {
             if ($this->nested && is_callable($this->nested))
             {
                 $name = rtrim($this->pre_from, '/');
-                Route::prefix($name, $this->nested);
+				if(array_key_exists('subdomain', $this->options))
+				{
+	           		Route::prefix(array('name' => $name, 'subdomain' => $this->options['subdomain']), $this->nested);
+				}
+				else
+				{
+                	Route::prefix($name, $this->nested);
+				}
             }
 
         }
@@ -809,6 +949,43 @@ class Route {
                         $substitution_list[] = $value;
                     }
                 }
+
+				// check for named subdomains 
+				if(array_key_exists('subdomain',$this->options))
+				{
+					$i = preg_match('/^\{(.+)\}$/', $this->options['subdomain']);
+					
+					if($i > 0)
+					{
+						preg_match('/^\{(.+)\}$/', $this->options['subdomain'], $check);
+						
+						$subdomain = $check[1];
+
+						if(!array_key_exists($subdomain, $this->parameters))
+						{
+							$pattern_value = Route::get_pattern($subdomain);
+							
+							if(!is_null($pattern_value))
+	                        {
+	                        	$this->options['subdomain'] = $pattern_value;
+							}
+							else
+							{
+								$this->options['subdomain'] = '(:any)';
+							}
+						}
+						else 
+						{
+							$value = $this->parameters[$subdomain]['value'];
+						 	$this->options['subdomain'] = $value;
+						}
+					}
+					else
+					{
+						$this->options['checked_subdomain'] = $this->options['subdomain'];
+						unset($this->options['subdomain']);
+					}
+				}
                 
                 $this->from = preg_replace($pattern_list, $substitution_list, $this->pre_from);
 
@@ -842,13 +1019,8 @@ class Route {
                 $parameter_list = $parameter;
             }
             
-            foreach($parameter_list as $parameter => $pattern)
-            {
-                if(array_key_exists($parameter, $this->parameters))
-                {
-                    $this->parameters[$parameter]['value'] = $pattern;
-                }
-            }
+			$this->parameters[$parameter]['value'] = $pattern;
+
             
             return $this;
         }
@@ -859,7 +1031,10 @@ class Route {
             
             foreach($this->parameters as $key => $parameter)
             {
-                $return_parameters[$key] = $parameter['uri'];
+            	if(array_key_exists('uri', $parameter))
+				{
+					$return_parameters[$key] = $parameter['uri'];
+				}
             }
             
             return $return_parameters;
@@ -881,5 +1056,23 @@ class Route {
             
             return array();
         }
+		
+		public function get_options($option = NULL)
+		{
+			if($option == NULL)
+			{
+				return $this->options;
+			}
+			else
+			{
+				if(array_key_exists($option, $this->options))
+				{
+					return $this->options[$option];
+				}
+			}
+			
+			return FALSE;
+			
+		}
         
     }
