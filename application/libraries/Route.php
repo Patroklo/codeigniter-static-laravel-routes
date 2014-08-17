@@ -728,9 +728,20 @@ class Route {
             
             foreach($filter_list as $filter)
             {
+            	$param = NULL;
+				
+				// check if callback has parameters
+				if (preg_match('/(.*?)\[(.*)\]/', $filter, $match))
+				{
+					$filter	= $match[1];
+					$param	= $match[2];
+				}
+
                 if(array_key_exists($filter, self::$filter_list))
                 {
-                    $callback_list[] = self::$filter_list[$filter];
+                    $callback_list[] = array('filter'		=> self::$filter_list[$filter],
+											 'parameters'	=> $param
+											);
                 }
             }
 

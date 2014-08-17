@@ -20,7 +20,7 @@ For now I'm not licensing this work. It has some code from the Bonfire Project, 
 
 ## Future plans
 
-- Adding subdomain routing.
+- None for now.
 
 ## Installation
 
@@ -175,6 +175,17 @@ Passing multiple filters
 	
 	Route::any('user/{id}',	'user/load/$1', array('before' => array('logged_in', 'check_params')));
 	Route::any('user/{id}',	'user/load/$1', array('after' => 'logged_in|check_params'));
+	
+	
+Specifying filter parameters
+
+Sometimes it's useful to send parameters to the filter anonymous functions. This can be easily made as:
+
+	Route::any('user/{id}',	'user/load/$1', array('before' => 'logged_in[user_name]'));
+	
+The developer can also add uri segments as parameters putting the number or name of the segment between {}. The filter parameters will be separated with the ":" character
+
+	Route::any('user/{id}',	'user/load/$1', array('before' => 'logged_in[user_name:{id}]'));
 	
 
 ### Route groups

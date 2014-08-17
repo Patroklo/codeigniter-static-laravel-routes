@@ -9,7 +9,7 @@
 		{
 			parent::__construct();
 			
-			$this->__filter_params = $this->uri->segment_array();
+			$this->__filter_params = array($this->uri->uri_string());
 			
 			$this->call_filters('before');
 		}
@@ -29,12 +29,36 @@
 		
 		private function call_filters($type)
 		{
+
 			$loaded_route = $this->router->get_active_route();
 			$filter_list = Route::get_filters($loaded_route, $type);
-			
-			foreach($filter_list as $callback)
+
+			foreach($filter_list as $filter_data)
 			{
-				call_user_func_array($callback, $this->__filter_params);
+				$param_list = $this->__filter_params;
+				
+				$callback 	= $filter_data['filter'];
+				$params		= $filter_data['parameters'];
+				
+				// check if callback has parameters
+				if(!is_null($params))
+				{
+					// separate the multiple parameters in case there are defined
+					$params = explode(':', $params);
+					
+					// search for uris defined as parameters, they will be marked as {(.*)}
+					foreach($params as &$p)
+					{
+						if (preg_match('/\{(.*)\}/', $p, $match_p))
+						{
+							$p = $this->uri->segment($match_p[1]);
+						}
+					}
+
+					$param_list = array_merge($param_list, $params);
+				}
+
+				call_user_func_array($callback, $param_list);
 			}
 		}
 		
