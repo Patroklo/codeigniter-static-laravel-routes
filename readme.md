@@ -179,6 +179,8 @@ Passing multiple filters
 	
 Specifying filter parameters
 
+All filters always receive as first parameter the uri string of the route. But it's possible to set manually more parameters to send to the filter method.
+
 Sometimes it's useful to send parameters to the filter anonymous functions. This can be easily made as:
 
 	Route::any('user/{id}',	'user/load/$1', array('before' => 'logged_in[user_name]'));
@@ -186,6 +188,20 @@ Sometimes it's useful to send parameters to the filter anonymous functions. This
 The developer can also add uri segments as parameters putting the number or name of the segment between {}. The filter parameters will be separated with the ":" character
 
 	Route::any('user/{id}',	'user/load/$1', array('before' => 'logged_in[user_name:{id}]'));
+	
+Now the parameter will look like:
+	
+	Route::filter('logged_in', function($uri, $user_name, $id){
+	
+		var_dump($uri, $user_name, $id);
+	
+		if($this->auth->logged_in() == FALSE)
+		{	
+			show_404();
+		}
+	
+	});	
+
 	
 
 ### Route groups
