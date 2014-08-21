@@ -428,14 +428,26 @@ class Route {
      * @param  [type] $name [description]
      * @return [type]       [description]
      */
-    public static function named($name)
+    public static function named($name, $parameters = array())
     {
-        if (isset(self::$named_routes[$name]))
+    	if (isset(self::$named_routes[$name]))
         {
-            return self::$named_routes[$name];
+            $return_url = self::$named_routes[$name];
         }
+		else
+		{
+			return NULL;
+		}
+		
+		if(!empty($parameters))
+		{
+			foreach($parameters as $key => $parameter)
+			{
+				$return_url = str_replace('$'.($key + 1), $parameter, $return_url);
+			}
+		}
 
-        return NULL;
+        return $return_url;
     }
     
     //--------------------------------------------------------------------
@@ -451,9 +463,9 @@ class Route {
      * @param  [type] $name [description]
      * @param  string $from the route itself
      */
-    public static function set_name($name, $from)
+    public static function set_name($name, $route)
     {
-        self::$named_routes[$name] = $from;
+        self::$named_routes[$name] = $route;
     }
 
     //--------------------------------------------------------------------
@@ -798,13 +810,7 @@ class Route {
             
             //check for route parameters
             $this->_check_parameters();
-    
-            // Are we saving the name for this one?
-            if (isset($this->options['as']) && ! empty($this->options['as']))
-            {
-                Route::set_name($this->options['as'], $this->pre_from);
-            }
-            
+
         }
         
         public function make()
@@ -921,7 +927,10 @@ class Route {
             {
                 $pattern_list       = array();
                 $substitution_list  = array();
-                
+                $named_route_substitution_list = array();
+				
+				$pattern_num = 1;
+				
                 foreach($this->parameters as $parameter => $data)
                 {
                     $value = $data['value'];
@@ -959,6 +968,9 @@ class Route {
                         
                         $substitution_list[] = $value;
                     }
+
+					$named_route_substitution_list[] = '\$'.$pattern_num;
+					$pattern_num+= 1;
                 }
 
 				// check for named subdomains 
@@ -998,7 +1010,17 @@ class Route {
 					}
 				}
                 
+                // make substitutions to make codeigniter comprensible routes
                 $this->from = preg_replace($pattern_list, $substitution_list, $this->pre_from);
+				
+				// make substitutions in case there is a named route 
+		        // Are we saving the name for this one?
+	            if (isset($this->options['as']) && ! empty($this->options['as']))
+	            {
+	            	$named_route = preg_replace($pattern_list, $named_route_substitution_list, $this->pre_from);
+
+	                Route::set_name($this->options['as'], $named_route);
+	            }
 
             }
             return $this->from;
