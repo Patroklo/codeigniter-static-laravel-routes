@@ -7,6 +7,38 @@
 		
 	private $active_route;
 
+
+
+	/**
+	 * _set_routing
+	 *
+	 * Adds routes that are stored in the /application/routes/ directory
+	 * then calls the usual _set_routing method
+	 *
+	 * @return	void
+	 */	
+	protected function _set_routing()
+	{
+
+		// Load the routes.php file.
+		if (is_dir(APPPATH.'routes'))
+		{
+			$file_list = scandir(APPPATH.'routes');
+			foreach($file_list as $file)
+			{
+				if (is_file(APPPATH.'routes/'.$file))
+				{
+					include(APPPATH.'routes/'.$file);
+				}
+			}
+		}
+		parent::_set_routing();
+	}
+
+
+
+
+
 	/**
 	 * Parse Routes
 	 *

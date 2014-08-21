@@ -82,7 +82,11 @@ Calling a named route:
  	echo Route::named('user');
  	
  	redirect(Route::named('user'));
-	
+
+Optionally, if that route has uri parameters, you can set them via array at the second parameter of the method:
+
+
+redirect(Route::named('user', array('12')));
 
 ### Named parameters
 
@@ -270,6 +274,13 @@ Not very useful now that Codeigniter only has static routes with this library, b
 	Route::block('user/(:any)');
 	
 Will generate a blank route to this uris that, eventually, will led to a 404 display error.
+
+
+### Additional route files
+
+The library will search for a folder named "routes" at "application/". Also will open all files listed inside it, so if the developer want's to have more than one file to keep an organized route file structure he can deploy the files there and all will be processed by the Routes library.
+
+Important note: the `Route::map()` call method must be always placed only at the "/application/config/routes.php" file.
 
 ## Change Log
 
