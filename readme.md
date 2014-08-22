@@ -284,6 +284,11 @@ Important note: the `Route::map()` call method must be always placed only at the
 
 ## Change Log
 
+### 1.5:
+*	Added support to subdomains
+*	Added "routes" folder that lets developer use more than one file to storage routes.
+*	Improved route naming functionalities.
+*	Added support to send parameters to filters.
 
 ### 1.0:
 *	First release of the system. Added static routes, filter hook system and naming routes system.
