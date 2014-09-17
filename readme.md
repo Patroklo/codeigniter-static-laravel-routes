@@ -20,7 +20,7 @@ For now I'm not licensing this work. It has some code from the Bonfire Project, 
 
 ## Future plans
 
-- None for now.
+- Caching routes.
 
 ## Installation
 
