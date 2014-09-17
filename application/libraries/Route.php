@@ -258,6 +258,7 @@ class Route {
         if (isset($options['controller']))
         {
             $new_name = $options['controller'];
+			unset($options['controller']);
         }
 
         // If a new module was specified, simply put that path
@@ -265,6 +266,7 @@ class Route {
         if (isset($options['module']))
         {
             $new_name = $options['module'] .'/'. $new_name;
+			unset($options['module']);
         }
 
         // In order to allow customization of allowed id values
@@ -274,13 +276,21 @@ class Route {
         if (isset($options['constraint']))
         {
             $id = $options['constraint'];
+			unset($options['constraint']);
         }
 
         // If the 'offset' option is passed in, it means that all of our
         // parameter placeholders in the $to ($1, $2, etc), need to be
         // offset by that amount. This is useful when we're using an API
         // with versioning in the URL.
-        $offset = isset($options['offset']) ? (int)$options['offset'] : 0;
+        
+        $offset = 0;
+		
+        if (isset($options['offset']))
+		{
+			$offset = (int)$options['offset'];
+			unset($options['offset']);
+		}
         
         if(count(self::$prefix) > 0)
         {
@@ -291,14 +301,18 @@ class Route {
             }
         }
         
+		if (empty($options))
+		{
+			$options = NULL;
+		}
 
-        self::get($name,                    $new_name .'/index'. $nest_offset,                        null,   $nested);
-        self::get($name .'/new',            $new_name .'/create_new'. $nest_offset,                   null,   $nested);
-        self::get($name .'/'. $id .'/edit', $new_name .'/edit'. $nest_offset .'/$'. (1 + $offset),    null,   $nested);
-        self::get($name .'/'. $id,          $new_name .'/show'. $nest_offset .'/$'. (1 + $offset),    null,   $nested);
-        self::post($name,                   $new_name .'/create'. $nest_offset,                       null,   $nested);
-        self::put($name .'/'. $id,          $new_name .'/update'. $nest_offset .'/$'. (1 + $offset),  null,   $nested);
-        self::delete($name .'/'. $id,       $new_name .'/delete'. $nest_offset .'/$'. (1 + $offset),  null,   $nested);
+        self::get($name,                    $new_name .'/index'. $nest_offset,                        $options,   $nested);
+        self::get($name .'/new',            $new_name .'/create_new'. $nest_offset,                   $options,   $nested);
+        self::get($name .'/'. $id .'/edit', $new_name .'/edit'. $nest_offset .'/$'. (1 + $offset),    $options,   $nested);
+        self::get($name .'/'. $id,          $new_name .'/show'. $nest_offset .'/$'. (1 + $offset),    $options,   $nested);
+        self::post($name,                   $new_name .'/create'. $nest_offset,                       $options,   $nested);
+        self::put($name .'/'. $id,          $new_name .'/update'. $nest_offset .'/$'. (1 + $offset),  $options,   $nested);
+        self::delete($name .'/'. $id,       $new_name .'/delete'. $nest_offset .'/$'. (1 + $offset),  $options,   $nested);
     }
 
     //--------------------------------------------------------------------

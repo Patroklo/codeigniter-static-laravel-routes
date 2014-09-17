@@ -242,7 +242,7 @@ Another way of define route groups
 ### RESTFUL like routes
 
 	
-	Route::resources('photos');
+	Route::resources('photos', $options);
 	
 
 This will autocreate all this routes:
@@ -254,6 +254,9 @@ This will autocreate all this routes:
   GET     /photos/{id}/edit   edit    return the HTML form for editing a single photo
   PUT     /photos/{id}    update      update a specific photo
   DELETE  /photos/{id}    delete      delete a specific photo
+  
+  The $options parameter it's optional and can hold the same values as any other $options parameter
+  of the rest of route methods (like filters, etc...).
 
 
 ### Auto routes
@@ -288,6 +291,9 @@ The library will search for a folder named "routes" at "application/". Also will
 Important note: the `Route::map()` call method must be always placed only at the "/application/config/routes.php" file.
 
 ## Change Log
+
+### 1.5.2
+*	Added support for $options parameter to "resources" method.
 
 ### 1.5.1
 *	Added support for anonymous functions directly into route filter definition.
