@@ -180,6 +180,12 @@ Passing multiple filters
 	Route::any('user/{id}',	'user/load/$1', array('before' => array('logged_in', 'check_params')));
 	Route::any('user/{id}',	'user/load/$1', array('after' => 'logged_in|check_params'));
 	
+Anonymous function filters
+	
+	Route::any('user/{id}',	'user/load/$1', array('before' => function(){
+																			// your code here
+																		}));
+
 	
 Specifying filter parameters
 
@@ -204,9 +210,8 @@ Now the parameter will look like:
 			show_404();
 		}
 	
-	});	
+	});
 
-	
 
 ### Route groups
 
@@ -284,8 +289,11 @@ Important note: the `Route::map()` call method must be always placed only at the
 
 ## Change Log
 
+### 1.5.1
+*	Added support for anonymous functions directly into route filter definition.
+
 ### 1.5:
-*	Added support to subdomains
+*	Added support for subdomains
 *	Added "routes" folder that lets developer use more than one file to storage routes.
 *	Improved route naming functionalities.
 *	Added support to send parameters to filters.

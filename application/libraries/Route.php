@@ -740,21 +740,30 @@ class Route {
             
             foreach($filter_list as $filter)
             {
-            	$param = NULL;
-				
-				// check if callback has parameters
-				if (preg_match('/(.*?)\[(.*)\]/', $filter, $match))
+            	if (is_callable($filter))
 				{
-					$filter	= $match[1];
-					$param	= $match[2];
+                    $callback_list[] = array('filter'		=> $filter,
+											 'parameters'	=> NULL
+											);	
 				}
-
-                if(array_key_exists($filter, self::$filter_list))
-                {
-                    $callback_list[] = array('filter'		=> self::$filter_list[$filter],
-											 'parameters'	=> $param
-											);
-                }
+				else
+				{
+	            	$param = NULL;
+					
+					// check if callback has parameters
+					if (preg_match('/(.*?)\[(.*)\]/', $filter, $match))
+					{
+						$filter	= $match[1];
+						$param	= $match[2];
+					}
+	
+	                if(array_key_exists($filter, self::$filter_list))
+	                {
+	                    $callback_list[] = array('filter'		=> self::$filter_list[$filter],
+												 'parameters'	=> $param
+												);
+	                }
+				}
             }
 
             return $callback_list;
@@ -1079,10 +1088,15 @@ class Route {
             {
                 $filters =  $this->options[$type];
                 
-                if(!is_array($filters))
+                if (is_string($filters))
                 {
                     $filters = explode('|', $filters);
                 }
+
+				if ( ! is_array($filters))
+				{
+					$filters = array($filters);
+				}
 
                 return $filters;
             }
