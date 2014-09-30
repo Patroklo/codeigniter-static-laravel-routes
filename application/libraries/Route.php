@@ -847,9 +847,9 @@ class Route {
                 //we get rid of prefix in case it exists
                 if (strpos($from, $this->prefix) === 0)
                 {
-                    $from = substr($from, 0, strlen($this->prefix));
+                    $from = substr($from, strlen($this->prefix));
                 }
-                
+
             	foreach($parameter as $p)
 				{
 					$from = str_replace('/{'.$p.'}', '', $from);
