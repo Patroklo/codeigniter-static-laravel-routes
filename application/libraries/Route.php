@@ -827,9 +827,9 @@ class Route {
             $this->options  = $options;
             $this->nested   = $nested;
             
-            $prefix = Route::get_prefix();
+            $this->prefix = Route::get_prefix();
 
-            $this->pre_from = $prefix . $this->pre_from;
+            $this->pre_from = $this->prefix . $this->pre_from;
             
             //check for route parameters
             $this->_check_parameters();
@@ -844,6 +844,12 @@ class Route {
             {
             	$from = $this->pre_from;
 				
+                //we get rid of prefix in case it exists
+                if (strpos($from, $this->prefix) === 0)
+                {
+                    $from = substr($from, 0, strlen($this->prefix));
+                }
+                
             	foreach($parameter as $p)
 				{
 					$from = str_replace('/{'.$p.'}', '', $from);
