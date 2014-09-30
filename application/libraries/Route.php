@@ -258,7 +258,6 @@ class Route {
         if (isset($options['controller']))
         {
             $new_name = $options['controller'];
-			unset($options['controller']);
         }
 
         // If a new module was specified, simply put that path
@@ -266,7 +265,6 @@ class Route {
         if (isset($options['module']))
         {
             $new_name = $options['module'] .'/'. $new_name;
-			unset($options['module']);
         }
 
         // In order to allow customization of allowed id values
@@ -276,21 +274,13 @@ class Route {
         if (isset($options['constraint']))
         {
             $id = $options['constraint'];
-			unset($options['constraint']);
         }
 
         // If the 'offset' option is passed in, it means that all of our
         // parameter placeholders in the $to ($1, $2, etc), need to be
         // offset by that amount. This is useful when we're using an API
         // with versioning in the URL.
-        
-        $offset = 0;
-		
-        if (isset($options['offset']))
-		{
-			$offset = (int)$options['offset'];
-			unset($options['offset']);
-		}
+        $offset = isset($options['offset']) ? (int)$options['offset'] : 0;
         
         if(count(self::$prefix) > 0)
         {
@@ -301,18 +291,14 @@ class Route {
             }
         }
         
-		if (empty($options))
-		{
-			$options = NULL;
-		}
 
-        self::get($name,                    $new_name .'/index'. $nest_offset,                        $options,   $nested);
-        self::get($name .'/new',            $new_name .'/create_new'. $nest_offset,                   $options,   $nested);
-        self::get($name .'/'. $id .'/edit', $new_name .'/edit'. $nest_offset .'/$'. (1 + $offset),    $options,   $nested);
-        self::get($name .'/'. $id,          $new_name .'/show'. $nest_offset .'/$'. (1 + $offset),    $options,   $nested);
-        self::post($name,                   $new_name .'/create'. $nest_offset,                       $options,   $nested);
-        self::put($name .'/'. $id,          $new_name .'/update'. $nest_offset .'/$'. (1 + $offset),  $options,   $nested);
-        self::delete($name .'/'. $id,       $new_name .'/delete'. $nest_offset .'/$'. (1 + $offset),  $options,   $nested);
+        self::get($name,                    $new_name .'/index'. $nest_offset,                        null,   $nested);
+        self::get($name .'/new',            $new_name .'/create_new'. $nest_offset,                   null,   $nested);
+        self::get($name .'/'. $id .'/edit', $new_name .'/edit'. $nest_offset .'/$'. (1 + $offset),    null,   $nested);
+        self::get($name .'/'. $id,          $new_name .'/show'. $nest_offset .'/$'. (1 + $offset),    null,   $nested);
+        self::post($name,                   $new_name .'/create'. $nest_offset,                       null,   $nested);
+        self::put($name .'/'. $id,          $new_name .'/update'. $nest_offset .'/$'. (1 + $offset),  null,   $nested);
+        self::delete($name .'/'. $id,       $new_name .'/delete'. $nest_offset .'/$'. (1 + $offset),  null,   $nested);
     }
 
     //--------------------------------------------------------------------
@@ -754,30 +740,21 @@ class Route {
             
             foreach($filter_list as $filter)
             {
-            	if (is_callable($filter))
+            	$param = NULL;
+				
+				// check if callback has parameters
+				if (preg_match('/(.*?)\[(.*)\]/', $filter, $match))
 				{
-                    $callback_list[] = array('filter'		=> $filter,
-											 'parameters'	=> NULL
-											);	
+					$filter	= $match[1];
+					$param	= $match[2];
 				}
-				else
-				{
-	            	$param = NULL;
-					
-					// check if callback has parameters
-					if (preg_match('/(.*?)\[(.*)\]/', $filter, $match))
-					{
-						$filter	= $match[1];
-						$param	= $match[2];
-					}
-	
-	                if(array_key_exists($filter, self::$filter_list))
-	                {
-	                    $callback_list[] = array('filter'		=> self::$filter_list[$filter],
-												 'parameters'	=> $param
-												);
-	                }
-				}
+
+                if(array_key_exists($filter, self::$filter_list))
+                {
+                    $callback_list[] = array('filter'		=> self::$filter_list[$filter],
+											 'parameters'	=> $param
+											);
+                }
             }
 
             return $callback_list;
@@ -827,9 +804,9 @@ class Route {
             $this->options  = $options;
             $this->nested   = $nested;
             
-            $prefix = Route::get_prefix();
+            $this->prefix = Route::get_prefix();
 
-            $this->pre_from = $prefix . $this->pre_from;
+            $this->pre_from = $this->prefix . $this->pre_from;
             
             //check for route parameters
             $this->_check_parameters();
@@ -844,10 +821,17 @@ class Route {
             {
             	$from = $this->pre_from;
 				
+				//we get rid of prefix in case it exists
+				if (strpos($from, $this->prefix) === 0)
+				{
+					$from = substr($from, 0, strlen($this->prefix));
+				}
+				
             	foreach($parameter as $p)
 				{
 					$from = str_replace('/{'.$p.'}', '', $from);
 				}
+
                 //save the optional routes in case we will need them for where callings
                 $this->optional_objects[] = Route::createRoute($from, $this->to, $this->options, $this->nested);
             }
@@ -1102,15 +1086,10 @@ class Route {
             {
                 $filters =  $this->options[$type];
                 
-                if (is_string($filters))
+                if(!is_array($filters))
                 {
                     $filters = explode('|', $filters);
                 }
-
-				if ( ! is_array($filters))
-				{
-					$filters = array($filters);
-				}
 
                 return $filters;
             }
