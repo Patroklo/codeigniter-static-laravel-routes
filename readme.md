@@ -9,7 +9,7 @@ Based on the routing work of ([Bonfire team](http://cibonfire.com/)).
 
 ## Requirements
 
-Codeigniter 3.x (not plans of 2.x library)
+Codeigniter 3.x (For the 2.x branch look at: [LINK](https://github.com/Patroklo/codeigniter-static-laravel-routes/tree/for-codeigniter-2.X)
 
 Php 5.3 or above
 
