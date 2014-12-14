@@ -8,7 +8,6 @@
 	private $active_route;
 
 
-
 	/**
 	 * _set_routing
 	 *
@@ -17,7 +16,7 @@
 	 *
 	 * @return	void
 	 */	
-	protected function _set_routing()
+	public function _set_routing()
 	{
 
 		// Load the routes.php file.
@@ -37,8 +36,6 @@
 
 
 
-
-
 	/**
 	 * Parse Routes
 	 *
@@ -47,7 +44,7 @@
 	 *
 	 * @return	void
 	 */
-	protected function _parse_routes()
+	public function _parse_routes()
 	{
 		// Turn the segment array into a URI string
 		$uri = implode('/', $this->uri->segments);
