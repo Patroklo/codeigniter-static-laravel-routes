@@ -26,6 +26,24 @@ For now I'm not licensing this work. It has some code from the Bonfire Project, 
 
 Just put copy the files into your server using the same folder structure. If the developer have a previously installed module system as HMVC the developer could have to overwrite the MY_Route files. If that's the case and the developer have any trouble making it, just ask for directions about that.
 
+## Installation alongside Hierarchical model-view-controller (HMVC) modules
+
+I have tested 2 libraries right now, I don't give direct support to any of those and all I won't be responsible of the changes you make in any file.
+
+### wiredesignz Modular extensions - HMVC 
+
+The installation it's pretty simple with this library.
+
+1 - Add the HMVC library on your Codeigniter installation. ([LINK](https://bitbucket.org/wiredesignz/codeigniter-modular-extensions-hmvc)).
+
+2 - Change the APPPATH/core/MY_Router.php file to another name, I'll use "Base_Router.php" in this tutorial. You'll also have to change the class name of the file to match the filename.
+
+3 - Then install this library.
+
+4 - Change the APPPATH/core/MY_Controller.php extended file from "CI_Controller" to "MX_Controller".
+
+5 - Change the APPPATH/core/MY_Router.php extended file from "CI_Router" to the new name you have given to the router file of the modular extensions library (in this example "Base_router") remember that you probably will have to add a include_once clause to import that file before the class declaration.
+
 
 ## Routing tutorial
 
