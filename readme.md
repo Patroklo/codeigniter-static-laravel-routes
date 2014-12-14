@@ -44,6 +44,21 @@ The installation it's pretty simple with this library.
 
 5 - Change the APPPATH/core/MY_Router.php extended file from "CI_Router" to the new name you have given to the router file of the modular extensions library (in this example "Base_router") remember that you probably will have to add a include_once clause to import that file before the class declaration.
 
+tl;dr install HMVC library, install the router library and make MY_Controller extend MX_Controller and MY_Router extend the HMVC Router library.
+
+### jenssegers codeigniter-hmvc-modules
+
+1 - Add the HMVC library on your Codeigniter installation. ([LINK](https://github.com/jenssegers/codeigniter-hmvc-modules)).
+
+2 - Delete the APPPATH/core/MY_Router.php file and put the APPPATH/third_party/HMVC/Router.php in it's place changing its name to MY_Router (and also the class inside the file).
+
+3 - Then install this library without MY_Router.php to prevent file collisions.
+
+4 - Move the Router.php file to APPPATH/core but changing its name to another one (in this example we will use "Base_Router.php").
+
+5 - Change the APPPATH/core/MY_Router.php extended file from "CI_Router" to the new name you have given to the router file of this library (in this example "Base_router") remember that you probably will have to add a include_once clause to import that file before the class declaration.
+
+tl;dr install HMVC library, install the router library and make the HMVC router library extend this router library.
 
 ## Routing tutorial
 
