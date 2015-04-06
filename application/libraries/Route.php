@@ -845,7 +845,7 @@ class Route {
             	$from = $this->pre_from;
 				
                 //we get rid of prefix in case it exists
-                if (strpos($from, $this->prefix) === 0)
+                if (!empty($this->prefix) && strpos($from, $this->prefix) === 0)
                 {
                     $from = substr($from, strlen($this->prefix));
                 }
