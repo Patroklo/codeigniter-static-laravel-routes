@@ -26,7 +26,7 @@
 			$file_list = scandir(APPPATH.'routes');
 			foreach($file_list as $file)
 			{
-				if (is_file(APPPATH.'routes/'.$file))
+				if (is_file(APPPATH.'routes/'.$file) and pathinfo($file, PATHINFO_EXTENSION) == 'php')
 				{
 					include(APPPATH.'routes/'.$file);
 				}
