@@ -280,6 +280,7 @@ Another way of define route groups
 
 This will autocreate all this routes:
 
+```
   GET     /photos         index       displaying a list of photos
   GET     /photos/new     create_new  return an HTML form for creating a photo
   POST    /photos         create      create a new photo
@@ -287,7 +288,8 @@ This will autocreate all this routes:
   GET     /photos/{id}/edit   edit    return the HTML form for editing a single photo
   PUT     /photos/{id}    update      update a specific photo
   DELETE  /photos/{id}    delete      delete a specific photo
-  
+```
+
   The $options parameter it's optional and can hold the same values as any other $options parameter
   of the rest of route methods (like filters, etc...).
 
