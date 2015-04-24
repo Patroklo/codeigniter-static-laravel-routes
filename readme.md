@@ -299,13 +299,14 @@ The developer can make with one call a 6 tier route definition
 	
 	Route::context('photos', 'photo');
 	
-
+```
   photo/(:any)/(:any)/(:any)/(:any)/(:any)/(:any)    	$1/photo/$2/$3/$4/$5/$6
   photo/(:any)/(:any)/(:any)/(:any)/(:any)				$1/photo/$2/$3/$4/$5
   photo/(:any)/(:any)/(:any)/(:any)						$1/photo/$2/$3/$4
   photo/(:any)/(:any)/(:any)							$1/photo/$2/$3
   photo/(:any)/(:any)									$1/photo/$2
   photo/(:any)											$1/photo
+```
 
 ### Block routes
 
