@@ -301,10 +301,7 @@ class Route {
             }
         }
         
-		if (empty($options))
-		{
-			$options = NULL;
-		}
+
 
         self::get($name,                    $new_name .'/index'. $nest_offset,                        $options,   $nested);
         self::get($name .'/new',            $new_name .'/create_new'. $nest_offset,                   $options,   $nested);
