@@ -129,6 +129,18 @@
 	}
 
 
+	/**
+	 * Set default controller
+	 *
+	 * @return	void
+	 */
+	protected function _set_default_controller()
+    {
+        parent::_set_default_controller();
+        
+        $this->active_route = 'default_controller';
+    }
+        
 	private function _load_request_uri($uri)
 	{
 		$this->active_route = $uri;
