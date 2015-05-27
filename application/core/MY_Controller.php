@@ -57,7 +57,12 @@
 
 					$param_list = array_merge($param_list, $params);
 				}
-
+				
+				if (class_exists('Closure') and method_exists('Closure', 'bind'))
+				{
+					$callback = Closure::bind($callback, $this);
+				}
+				
 				call_user_func_array($callback, $param_list);
 			}
 		}
