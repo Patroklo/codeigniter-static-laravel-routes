@@ -14,13 +14,12 @@
 		
 		public function segment($n, $no_result = NULL)
 		{
-			if(!is_numeric($n))
+			if (!is_numeric($n))
 			{
-				if(array_key_exists($n, $this->uri_parameters))
+				if (array_key_exists($n, $this->uri_parameters))
 				{
 					$n = $this->uri_parameters[$n];
-				}
-				else
+				} else
 				{
 					return $no_result;
 				}
@@ -31,13 +30,12 @@
 		
 		public function rsegment($n, $no_result = NULL)
 		{
-			if(!is_numeric($n))
+			if (!is_numeric($n))
 			{
-				if(array_key_exists($n, $this->uri_parameters))
+				if (array_key_exists($n, $this->uri_parameters))
 				{
 					$n = $this->uri_parameters[$n];
-				}
-				else
+				} else
 				{
 					return $no_result;
 				}

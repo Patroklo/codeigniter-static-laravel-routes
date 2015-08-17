@@ -264,7 +264,7 @@ class Route
 		// If a new module was specified, simply put that path
 		// in front of the controller.
 		if (isset($options['module'])) {
-			$new_name = $options['module'] . '/' . $new_name;
+			$new_name = $options['module'].'/'.$new_name;
 			unset($options['module']);
 		}
 
@@ -285,25 +285,25 @@ class Route
 		$offset = 0;
 
 		if (isset($options['offset'])) {
-			$offset = (int)$options['offset'];
+			$offset = (int) $options['offset'];
 			unset($options['offset']);
 		}
 
 		if (is_array(self::$prefix) && !empty(self::$prefix)) {
 			foreach (self::$prefix as $key => $p) {
-				$nest_offset .= '/$' . ($key + 1);
+				$nest_offset .= '/$'.($key + 1);
 				$offset++;
 			}
 		}
 
 
-		self::get($name, $new_name . '/index' . $nest_offset, $options, $nested);
-		self::get($name . '/new', $new_name . '/create_new' . $nest_offset, $options, $nested);
-		self::get($name . '/' . $id . '/edit', $new_name . '/edit' . $nest_offset . '/$' . (1 + $offset), $options, $nested);
-		self::get($name . '/' . $id, $new_name . '/show' . $nest_offset . '/$' . (1 + $offset), $options, $nested);
-		self::post($name, $new_name . '/create' . $nest_offset, $options, $nested);
-		self::put($name . '/' . $id, $new_name . '/update' . $nest_offset . '/$' . (1 + $offset), $options, $nested);
-		self::delete($name . '/' . $id, $new_name . '/delete' . $nest_offset . '/$' . (1 + $offset), $options, $nested);
+		self::get($name, $new_name.'/index'.$nest_offset, $options, $nested);
+		self::get($name.'/new', $new_name.'/create_new'.$nest_offset, $options, $nested);
+		self::get($name.'/'.$id.'/edit', $new_name.'/edit'.$nest_offset.'/$'.(1 + $offset), $options, $nested);
+		self::get($name.'/'.$id, $new_name.'/show'.$nest_offset.'/$'.(1 + $offset), $options, $nested);
+		self::post($name, $new_name.'/create'.$nest_offset, $options, $nested);
+		self::put($name.'/'.$id, $new_name.'/update'.$nest_offset.'/$'.(1 + $offset), $options, $nested);
+		self::delete($name.'/'.$id, $new_name.'/delete'.$nest_offset.'/$'.(1 + $offset), $options, $nested);
 	}
 
 	//--------------------------------------------------------------------
@@ -402,7 +402,7 @@ class Route
 	public static function get_prefix()
 	{
 		if (!empty(self::$prefix)) {
-			return implode('/', self::$prefix) . '/';
+			return implode('/', self::$prefix).'/';
 		} else {
 			return '';
 		}
@@ -432,7 +432,7 @@ class Route
 
 		if (!empty($parameters)) {
 			foreach ($parameters as $key => $parameter) {
-				$return_url = str_replace('$' . ($key + 1), $parameter, $return_url);
+				$return_url = str_replace('$'.($key + 1), $parameter, $return_url);
 			}
 		}
 
@@ -489,7 +489,7 @@ class Route
 			$controller = $name;
 		}
 
-		$offset = isset($options['offset']) ? (int)$options['offset'] : 0;
+		$offset = isset($options['offset']) ? (int) $options['offset'] : 0;
 
 		// Some helping hands
 		$first = 1 + $offset;
@@ -499,12 +499,12 @@ class Route
 		$fifth = 5 + $offset;
 		$sixth = 6 + $offset;
 
-		self::any($name . '/(:any)/(:any)/(:any)/(:any)/(:any)/(:any)', "\${$first}/{$controller}/\${$second}/\${$third}/\${$fourth}/\${$fifth}/\${$sixth}");
-		self::any($name . '/(:any)/(:any)/(:any)/(:any)/(:any)', "\${$first}/{$controller}/\${$second}/\${$third}/\${$fourth}/\${$fifth}");
-		self::any($name . '/(:any)/(:any)/(:any)/(:any)', "\${$first}/{$controller}/\${$second}/\${$third}/\${$fourth}");
-		self::any($name . '/(:any)/(:any)/(:any)', "\${$first}/{$controller}/\${$second}/\${$third}");
-		self::any($name . '/(:any)/(:any)', "\${$first}/{$controller}/\${$second}");
-		self::any($name . '/(:any)', "\${$first}/{$controller}");
+		self::any($name.'/(:any)/(:any)/(:any)/(:any)/(:any)/(:any)', "\${$first}/{$controller}/\${$second}/\${$third}/\${$fourth}/\${$fifth}/\${$sixth}");
+		self::any($name.'/(:any)/(:any)/(:any)/(:any)/(:any)', "\${$first}/{$controller}/\${$second}/\${$third}/\${$fourth}/\${$fifth}");
+		self::any($name.'/(:any)/(:any)/(:any)/(:any)', "\${$first}/{$controller}/\${$second}/\${$third}/\${$fourth}");
+		self::any($name.'/(:any)/(:any)/(:any)', "\${$first}/{$controller}/\${$second}/\${$third}");
+		self::any($name.'/(:any)/(:any)', "\${$first}/{$controller}/\${$second}");
+		self::any($name.'/(:any)', "\${$first}/{$controller}");
 
 		unset($first, $second, $third, $fourth, $fifth, $sixth);
 
@@ -617,7 +617,7 @@ class Route
 				define('ROUTE_DOMAIN_NAME', $_SERVER['HTTP_HOST']);
 			}
 
-			self::$subdomain = preg_replace('/^(?:([^\.]+)\.)?' . ROUTE_DOMAIN_NAME . '$/', '\1', $_SERVER['HTTP_HOST']);
+			self::$subdomain = preg_replace('/^(?:([^\.]+)\.)?'.ROUTE_DOMAIN_NAME.'$/', '\1', $_SERVER['HTTP_HOST']);
 		}
 
 		return self::$subdomain;
@@ -746,7 +746,7 @@ class Route_facade
 
 	private $loaded_object;
 
-	function __construct(Route_object &$object)
+	function __construct(Route_object & $object)
 	{
 		$this->loaded_object = &$object;
 	}
@@ -786,7 +786,7 @@ class Route_object
 
 		$this->prefix = Route::get_prefix();
 
-		$this->pre_from = $this->prefix . $this->pre_from;
+		$this->pre_from = $this->prefix.$this->pre_from;
 
 		//check for route parameters
 		$this->_check_parameters();
@@ -814,11 +814,11 @@ class Route_object
 			foreach ($parameter as $p) {
 
 				// Create the new $from without some of the optional routes
-				$from = str_replace('/{' . $p . '}', '', $from);
+				$from = str_replace('/{'.$p.'}', '', $from);
 
 				// Create the new $to without some of the optional destiny routes
 				if (array_key_exists($p, $parameter_positions)) {
-					$to = str_replace('/$' . ($parameter_positions[$p] + 1), '', $to);
+					$to = str_replace('/$'.($parameter_positions[$p] + 1), '', $to);
 				}
 			}
 
@@ -855,7 +855,7 @@ class Route_object
 					//$this->optional_parameters[$parameter] = $new_key;
 					$uris[] = $new_key;
 
-					$this->pre_from = str_replace('{' . $parameter . '}', '{' . $new_key . '}', $this->pre_from);
+					$this->pre_from = str_replace('{'.$parameter.'}', '{'.$new_key.'}', $this->pre_from);
 
 					$parameter = $new_key;
 				}
@@ -921,7 +921,7 @@ class Route_object
 
 				//if there is a question mark in the parameter
 				//we will add a scape \ for the regex
-				$pattern_list[] = '/\{' . $parameter . '\}/';
+				$pattern_list[] = '/\{'.$parameter.'\}/';
 
 				//if parameter is null will check if there is a global parameter, if not, 
 				//we will put an (:any)
@@ -930,7 +930,7 @@ class Route_object
 
 					if (!is_null($pattern_value)) {
 						if ($pattern_value[0] != '(' && $pattern_value[strlen($pattern_value) - 1] != ')') {
-							$pattern_value = '(' . $pattern_value . ')';
+							$pattern_value = '('.$pattern_value.')';
 						}
 
 						$substitution_list[] = $pattern_value;
@@ -939,13 +939,13 @@ class Route_object
 					}
 				} else {
 					if ($value[0] != '(' && $value[strlen($value) - 1] != ')') {
-						$value = '(' . $value . ')';
+						$value = '('.$value.')';
 					}
 
 					$substitution_list[] = $value;
 				}
 
-				$named_route_substitution_list[] = '\$' . $pattern_num;
+				$named_route_substitution_list[] = '\$'.$pattern_num;
 				$pattern_num += 1;
 			}
 
