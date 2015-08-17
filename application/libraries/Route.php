@@ -44,7 +44,7 @@ class Route
 	 *     Route::resource('posts');
 	 *     $route = Route::map($route);
 	 *
-	 * @param  array $route The array to merge
+	 * @param  array $routes The array to merge
 	 * @return array         The merge route array.
 	 */
 	public static function map($routes = array())
@@ -273,7 +273,7 @@ class Route
 			unset($options['offset']);
 		}
 
-		if (count(self::$prefix) > 0) {
+		if (is_array(self::$prefix) && !empty(self::$prefix)) {
 			foreach (self::$prefix as $key => $p) {
 				$nest_offset .= '/$' . ($key + 1);
 				$offset++;
@@ -330,7 +330,7 @@ class Route
 	 *          Route::resources('users');
 	 *      });
 	 *
-	 * @param  string $name The prefix to add to the routes.
+	 * @param  string|array $name The prefix to add to the routes.
 	 * @param  Closure $callback
 	 */
 	public static function prefix($name, Closure $callback)
@@ -359,7 +359,7 @@ class Route
 	/**
 	 * Add a prefix to the $prefix array
 	 *
-	 * @param  string $name The prefix to add to the routes.
+	 * @param  string $prefix The prefix to add to the routes.
 	 */
 
 	private static function _add_prefix($prefix)
@@ -434,7 +434,7 @@ class Route
 	 *      redirect( Route::named('posts') );
 	 *
 	 * @param  [type] $name [description]
-	 * @param  string $from the route itself
+	 * @param  string $route the route itself
 	 */
 	public static function set_name($name, $route)
 	{
@@ -560,6 +560,8 @@ class Route
 	 *
 	 * @param  string $from
 	 * @param  array $to
+	 * @param  array $options
+	 * @param  boolean $nested
 	 *
 	 * @return array          The built route.
 	 */
@@ -569,7 +571,7 @@ class Route
 			$options['subdomain'] = self::$active_subdomain;
 		}
 
-		if (array_key_exists('subdomain', $options) && self::_CheckSubdomain($options['subdomain']) == FALSE) {
+		if (array_key_exists('subdomain', $options) && self::_CheckSubdomain($options['subdomain']) === FALSE) {
 			return FALSE;
 		}
 
@@ -607,7 +609,7 @@ class Route
 
 	static function subdomain($subdomain_rules, closure $callback)
 	{
-		if (self::_CheckSubdomain($subdomain_rules) == TRUE) {
+		if (self::_CheckSubdomain($subdomain_rules) === TRUE) {
 			self::$active_subdomain = $subdomain_rules;
 			call_user_func($callback);
 		}
@@ -750,7 +752,6 @@ class Route_object
 	private $options;
 	private $nested;
 	private $prefix;
-	private $route;
 
 	private $optional_parameters = array();
 	private $parameters = array();
