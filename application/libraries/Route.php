@@ -998,22 +998,20 @@ class Route_object
 
 	public function where($parameter, $pattern = NULL)
 	{
-		//calling all the optional routes to send them the where
-		foreach ($this->optional_objects as $ob) {
-			$ob->where($parameter, $pattern);
-		}
-
-		if (!is_array($parameter)) {
-			if (is_null($pattern)) {
-				return $this;
+		if (is_array($parameter)) {
+			foreach ($parameter as $key => $value)
+			{
+				$this->where($key, $value);
 			}
-			$parameter_list[$parameter] = $pattern;
-		} else {
-			$parameter_list = $parameter;
 		}
-
-		$this->parameters[$parameter]['value'] = $pattern;
-
+		else {
+			//calling all the optional routes to send them the where
+			foreach ($this->optional_objects as $ob) {
+				$ob->where($parameter, $pattern);
+			}
+			
+			$this->parameters[$parameter]['value'] = $pattern;
+		}
 
 		return $this;
 	}
