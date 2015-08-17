@@ -124,6 +124,10 @@ class Route
 	// $_SERVER['REQUEST_METHOD'] is the proper type.
 	//
 
+	/**
+	 * @param string $from
+	 * @param string $to
+	 */
 	public static function get($from, $to, $options = array(), $nested = FALSE)
 	{
 		if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] == 'GET') {
@@ -133,6 +137,10 @@ class Route
 
 	//--------------------------------------------------------------------
 
+	/**
+	 * @param string $from
+	 * @param string $to
+	 */
 	public static function post($from, $to, $options = array(), $nested = FALSE)
 	{
 		if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -142,6 +150,10 @@ class Route
 
 	//--------------------------------------------------------------------
 
+	/**
+	 * @param string $from
+	 * @param string $to
+	 */
 	public static function put($from, $to, $options = array(), $nested = FALSE)
 	{
 		if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] == 'PUT') {
@@ -151,6 +163,10 @@ class Route
 
 	//--------------------------------------------------------------------
 
+	/**
+	 * @param string $from
+	 * @param string $to
+	 */
 	public static function delete($from, $to, $options = array(), $nested = FALSE)
 	{
 		if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] == 'DELETE') {
@@ -757,6 +773,10 @@ class Route_object
 	private $parameters = array();
 	private $optional_objects = array();
 
+	/**
+	 * @param string $from
+	 * @param boolean $nested
+	 */
 	function __construct($from, $to, $options, $nested)
 	{
 		$this->pre_from = $from;
